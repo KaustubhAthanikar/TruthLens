@@ -1,0 +1,28 @@
+# python
+venv/
+__pycache__/
+*.pyc
+
+# env
+.env
+backend/.env
+frontend/.env
+
+
+# uploads
+uploads/
+backend/uploads/
+
+
+# node
+node_modules/
+dist/
+
+
+# docker
+*.log
+
+
+# IDE
+.vscode/
+.idea/

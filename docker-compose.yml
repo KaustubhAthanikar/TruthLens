@@ -1,0 +1,26 @@
+services:
+
+  backend:
+
+    image: truthlens-backend
+
+    container_name: truthlens-backend
+
+    env_file:
+      - ./backend/.env
+
+    ports:
+      - "8000:8000"
+
+
+  frontend:
+
+    image: truthlens-frontend
+
+    container_name: truthlens-frontend
+
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend

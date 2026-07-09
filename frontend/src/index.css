@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg-main: #0b0f19; /* Deep dark blue-slate */
+  --color-brand-bg-surface: #151b2c; /* Clean dark panel */
+  --color-brand-border: #232d45; /* Border color */
+  
+  --color-brand-primary: #4f46e5; /* Classic Indigo */
+  --color-brand-secondary: #0ea5e9; /* Sky blue */
+  
+  --color-brand-true: #10b981; /* Emerald green */
+  --color-brand-false: #ef4444; /* Red */
+  --color-brand-warn: #f59e0b; /* Amber */
+  
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg-main);
+    color: #f1f5f9;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Very simple and basic animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #232d45;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3b5a;
+}
