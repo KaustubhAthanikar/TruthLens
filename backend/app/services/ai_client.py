@@ -27,10 +27,33 @@ def create_embedding(text):
 
 
 
+
+def create_embeddings(texts):
+
+    url = f"{settings.EMBEDDING_SERVICE_URL.rstrip('/')}/embed/batch"
+
+    response = requests.post(
+        url,
+        json={
+            "texts": texts
+        },
+        timeout=120
+    )
+
+    response.raise_for_status()
+
+    return response.json()["embeddings"]
+
+
+
+
+
 def extract_text_from_image(path):
 
     url = f"{settings.OCR_SERVICE_URL.rstrip('/')}/ocr"
+
     print("CALLING OCR:", url)
+
 
     with open(path, "rb") as file:
 
@@ -41,6 +64,7 @@ def extract_text_from_image(path):
             },
             timeout=120
         )
+
 
     response.raise_for_status()
 

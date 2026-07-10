@@ -2,60 +2,75 @@ import uuid
 
 from app.services.vectorstore.pinecone_client import get_index
 
-from app.services.ai_client import create_embedding
+from app.services.ai_client import (
+    create_embedding,
+    create_embeddings
+)
 
 from app.services.ranking.credibility_service import calculate_credibility
 
 
 index = get_index()
 
+
+
 def store_evidence_chunks(chunks, metadata):
 
-    vectors = []
+    texts = []
 
     for chunk in chunks:
 
         text = chunk.get("text")
 
-        if not text:
-            continue
+        if text:
+            texts.append(text)
 
-        embedding = create_embedding(text)
+
+
+    if not texts:
+        return
+
+
+
+    embeddings = create_embeddings(texts)
+
+
+    vectors = []
+
+
+    for i in range(len(texts)):
 
         vectors.append(
             {
                 "id": str(uuid.uuid4()),
 
-                "values": embedding,
+                "values": embeddings[i],
 
                 "metadata": {
 
-                    "text": text,
+                    "text": texts[i],
 
                     "url": str(metadata.get("url","")),
 
                     "source": str(metadata.get("source","")),
 
                     "title": str(metadata.get("title",""))
-
                 }
-
             }
-
         )
 
 
-    if vectors:
+    index.upsert(
+        vectors=vectors
+    )
 
-        index.upsert(
-            vectors=vectors
-        )
 
 
 
 def search_cached_evidence(claim, threshold=0.55):
 
     embedding = create_embedding(claim)
+
 
     result = index.query(
 
@@ -66,7 +81,9 @@ def search_cached_evidence(claim, threshold=0.55):
         include_metadata=True
     )
 
+
     evidence = []
+
 
     for match in result.matches:
 
@@ -74,49 +91,43 @@ def search_cached_evidence(claim, threshold=0.55):
 
             source = match.metadata.get("source","")
 
-
             credibility = calculate_credibility(source)
 
-            final_score = (match.score * 0.5 + credibility * 0.5)
-
-            evidence.append(
-                {
-                    "url":match.metadata.get("url"),
-
-                    "source":source,
-
-
-                    "title":match.metadata.get("title"),
-
-                    "top_chunks": [
-                        {
-                            "text":match.metadata.get("text",""),
-
-                            "similarity_score":round(match.score,3)
-                        }
-
-                    ],
-
-
-                    "similarity_score":round(match.score,3),
-
-                    "credibility_score":credibility,
-
-                    "final_score":round(final_score,3)
-                }
-
+            final_score = (
+                match.score * 0.5 
+                + credibility * 0.5
             )
 
 
+            evidence.append(
+                {
+                    "url": match.metadata.get("url"),
+
+                    "source": source,
+
+                    "title": match.metadata.get("title"),
+
+                    "top_chunks": [
+                        {
+                            "text": match.metadata.get("text",""),
+
+                            "similarity_score": round(match.score,3)
+                        }
+                    ],
+
+                    "similarity_score": round(match.score,3),
+
+                    "credibility_score": credibility,
+
+                    "final_score": round(final_score,3)
+                }
+            )
+
 
     evidence.sort(
-
         key=lambda x: x["final_score"],
-
         reverse=True
-
     )
-
 
 
     return evidence[:5]
