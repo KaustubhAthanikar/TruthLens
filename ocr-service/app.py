@@ -20,22 +20,23 @@ def home():
 @app.post("/ocr")
 async def ocr(file: UploadFile = File(...)):
 
-    path = "temp_" + file.filename
+    print("OCR REQUEST RECEIVED:", file.filename)
 
     try:
 
-        with open(path,"wb") as f:
-            f.write(await file.read())
-
-
         text = extract_text_from_image(path)
 
-        text = clean_social_text(text)
-
+        print("OCR OUTPUT:", text[:100])
 
         return {
             "text": text
         }
+
+    except Exception as e:
+
+        print("OCR FAILED:", str(e))
+
+        raise e
 
 
     finally:
