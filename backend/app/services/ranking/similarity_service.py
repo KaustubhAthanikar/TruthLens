@@ -3,18 +3,15 @@ import numpy as np
 from app.services.ai_client import create_embeddings
 
 
+def calculate_similarities(claim: str, texts: list):
 
-def calculate_similarities(claim: str, evidences: list):
-
-
-    if not evidences:
+    if not texts:
         return []
 
 
-    texts = [claim] + evidences
-
-
-    vectors = create_embeddings(texts)
+    vectors = create_embeddings(
+        [claim] + texts
+    )
 
 
     claim_vector = vectors[0]
@@ -30,9 +27,7 @@ def calculate_similarities(claim: str, evidences: list):
             vectors[i]
         )
 
-        scores.append(
-            float(score)
-        )
+        scores.append(float(score))
 
 
     return scores

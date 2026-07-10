@@ -1,27 +1,35 @@
-from app.services.chunking.chunk_service import create_chunks
-from app.services.ranking.similarity_service import calculate_similarity
-
-def rank_chunks(claim,evidence):
-    content = evidence.get("content","")
-    chunks = create_chunks(content)
-
-    ranked_chunks = []
-
-    for chunk in chunks:
-        score = calculate_similarity(claim,chunk)
-        ranked_chunks.append({
-            "text":chunk,
-            "similarity_score":round(score,3)
-        })
-    ranked_chunks.sort(key=lambda x:x["similarity_score"],reverse=True)
-    filtered = []
+from app.services.ranking.similarity_service import calculate_similarities
 
 
-    for chunk in ranked_chunks:
+def rank_chunks(claim, chunks):
 
-        if chunk["similarity_score"]>= 0.35 and len(chunk["text"]) > 100 :
+    if not chunks:
+        return []
 
-            filtered.append(chunk)
+
+    scores = calculate_similarities(
+        claim,
+        chunks
+    )
 
 
-    return filtered[:5]
+    ranked = []
+
+
+    for i in range(len(chunks)):
+
+        ranked.append(
+            {
+                "text": chunks[i],
+                "score": round(scores[i], 3)
+            }
+        )
+
+
+    ranked.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+
+    return ranked[:5]
