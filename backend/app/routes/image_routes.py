@@ -4,10 +4,10 @@ import shutil
 import uuid
 import os
 
-from app.services.ocr.ocr_service import extract_text_from_image
+from app.services.ai_client import extract_text_from_image
 from app.services.claim_service import create_claim
 
-from app.services.ocr.social_cleaner import clean_social_text
+from app.services.ai_client import extract_text_from_image
 
 
 router = APIRouter(prefix="/api/images",tags=["Images"])

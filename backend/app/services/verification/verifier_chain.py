@@ -23,29 +23,17 @@ parser = JsonOutputParser()
 
 prompt = ChatPromptTemplate.from_template(
 """
-
-You are a fake news verification system.
+You are a factual claim verification system.
 
 Verify the claim ONLY using the given evidence.
 
 Do not use outside knowledge.
 
+Claim:{claim}
 
-Claim:
-
-{claim}
-
-
-
-Evidence:
-
-{evidence}
-
-
+Evidence:{evidence}
 
 Return ONLY valid JSON in this format:
-
-
 {{
     "verdict":"SUPPORTS | REFUTES | UNCERTAIN",
 
@@ -56,11 +44,64 @@ Return ONLY valid JSON in this format:
     "reason":"short explanation"
 }}
 
+Verdict rules:
 
-Rules:
+SUPPORTS:
+Use only when the evidence directly proves the claim.
 
-- Evidence quote must exist in provided evidence.
-- If evidence is insufficient return UNCERTAIN.
+Confidence:
+90-100:
+The evidence clearly proves the claim with strong factual support.
+
+70-90:
+The evidence supports the claim but with limited sources.
+
+50-70:
+The evidence partially supports the claim.
+
+
+REFUTES:
+Use only when the evidence directly contradicts the claim.
+
+Confidence:
+90-100:
+The evidence clearly disproves the claim.
+
+70-90:
+Strong contradiction exists.
+
+50-70:
+Partial contradiction exists.
+
+
+UNCERTAIN:
+Use when:
+- Evidence is related but does not prove the claim.
+- Evidence is missing important facts.
+- The claim is subjective or opinion-based.
+- The claim cannot be objectively verified.
+
+UNCERTAIN confidence:
+0-30:
+Almost no relevant evidence.
+
+30-60:
+Some related evidence exists, but the claim cannot be proven.
+
+NEVER return confidence above 60 for UNCERTAIN.
+
+Important:
+Words like:"best","greatest","top","number one","most beautiful","worst" usually indicate subjective claims.
+
+Popularity, awards, followers, views, or fame do NOT prove such claims.
+
+
+Evidence quote rules:
+- Quote must exist exactly inside provided evidence.
+- Do not create quotes.
+
+
+Return JSON only.
 
 """
 )

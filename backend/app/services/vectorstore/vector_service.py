@@ -2,7 +2,7 @@ import uuid
 
 from app.services.vectorstore.pinecone_client import get_index
 
-from app.services.ranking.embedding_service import create_embedding
+from app.services.ai_client import create_embedding
 
 from app.services.ranking.credibility_service import calculate_credibility
 
@@ -26,7 +26,7 @@ def store_evidence_chunks(chunks, metadata):
             {
                 "id": str(uuid.uuid4()),
 
-                "values": embedding.tolist(),
+                "values": embedding,
 
                 "metadata": {
 
@@ -59,7 +59,7 @@ def search_cached_evidence(claim, threshold=0.55):
 
     result = index.query(
 
-        vector=embedding.tolist(),
+        vector=embedding,
 
         top_k=10,
 

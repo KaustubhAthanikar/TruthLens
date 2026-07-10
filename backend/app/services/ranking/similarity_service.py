@@ -1,5 +1,5 @@
 import numpy as np
-from app.services.ranking.embedding_service import create_embedding
+from app.services.ai_client import create_embedding
 
 def calculate_similarity(claim:str,evidence:str):
     claim_vector = create_embedding(claim)
