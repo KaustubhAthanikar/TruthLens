@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     PINECONE_API_KEY: str
     PINECONE_INDEX: str
     GEMINI_API_KEY:str
-    AI_SERVICE_URL: str
+    OCR_SERVICE_URL: str
+    EMBEDDING_SERVICE_URL: str
     class Config:
         env_file=".env"
 
