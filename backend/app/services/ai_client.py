@@ -26,22 +26,21 @@ def create_embedding(text):
     return response.json()["embedding"]
 
 
+
 def extract_text_from_image(path):
 
+    url = f"{settings.OCR_SERVICE_URL.rstrip('/')}/ocr"
 
     with open(path, "rb") as file:
 
-
         response = requests.post(
-            f"{OCR_SERVICE_URL}/ocr",
+            url,
             files={
                 "file": file
             },
-            timeout=60
+            timeout=120
         )
 
-
     response.raise_for_status()
-
 
     return response.json()["text"]
