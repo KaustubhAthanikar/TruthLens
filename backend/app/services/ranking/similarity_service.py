@@ -1,11 +1,31 @@
 import numpy as np
-from app.services.ai_client import create_embedding
 
-def calculate_similarity(claim:str,evidence:str):
-    claim_vector = create_embedding(claim)
-    evidence_vector = create_embedding(evidence)
-    if claim_vector is None or evidence_vector is None:
+from app.services.ai_client import create_embeddings
+
+
+def calculate_similarity(claim: str, evidence: str):
+
+    vectors = create_embeddings(
+        [
+            claim,
+            evidence
+        ]
+    )
+
+
+    if not vectors:
         return 0
-    score = np.dot(claim_vector,evidence_vector)
+
+
+    claim_vector = vectors[0]
+
+    evidence_vector = vectors[1]
+
+
+    score = np.dot(
+        claim_vector,
+        evidence_vector
+    )
+
 
     return float(score)
