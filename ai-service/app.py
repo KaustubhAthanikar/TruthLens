@@ -1,30 +1,34 @@
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
-
-import shutil
-import uuid
+import tempfile
 import os
-from services.embedding import create_embedding
-from  services.ocr import extract_text_from_image
+
+from services.embedding.embedding_service import create_embedding
+from services.ocr.ocr_service import extract_text_from_image
 from services.ocr.social_cleaner import clean_social_text
 
-app = FastAPI()
 
-class TextRequest(BaseModel):
+app = FastAPI(title="TruthLens AI Service")
+
+
+class EmbedRequest(BaseModel):
     text: str
 
 
 @app.get("/")
-def home():
+def health():
 
-    return {"status": "TruthLens AI Service Running"}
+    return {
+        "status": "running",
+        "service": "TruthLens AI"
+    }
 
 
 
 @app.post("/embed")
-def embed(data: TextRequest):
+def embed(request: EmbedRequest):
 
-    embedding = create_embedding(data.text)
+    embedding = create_embedding(request.text)
 
     return {"embedding": embedding}
 
@@ -33,16 +37,23 @@ def embed(data: TextRequest):
 @app.post("/ocr")
 async def ocr(file: UploadFile = File(...)):
 
-    filename = f"{uuid.uuid4()}.png"
+    temp_path = f"temp_{file.filename}"
 
-    with open(filename,"wb") as buffer:
+    try:
 
-        shutil.copyfileobj(file.file,buffer)
+        with open(temp_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
 
-    text = extract_text_from_image(filename)
 
-    os.remove(filename)
+        text = extract_text_from_image(temp_path)
 
-    text = clean_social_text(text)
+        text = clean_social_text(text)
 
-    return {"text": text}
+        return {"text": text}
+
+
+    finally:
+
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
