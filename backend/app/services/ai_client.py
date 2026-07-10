@@ -11,7 +11,7 @@ EMBEDDING_SERVICE_URL = settings.EMBEDDING_SERVICE_URL
 
 def create_embedding(text):
 
-    url = f"{settings.EMBEDDING_URL.rstrip('/')}/embed"
+    url = f"{settings.EMBEDDING_SERVICE_URL.rstrip('/')}/embed"
 
     response = requests.post(
         url,
