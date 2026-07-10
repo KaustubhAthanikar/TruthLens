@@ -30,6 +30,7 @@ def create_embedding(text):
 def extract_text_from_image(path):
 
     url = f"{settings.OCR_SERVICE_URL.rstrip('/')}/ocr"
+    print("CALLING OCR:", url)
 
     with open(path, "rb") as file:
 

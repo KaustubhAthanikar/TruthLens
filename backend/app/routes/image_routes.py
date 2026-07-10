@@ -48,6 +48,7 @@ async def verify_image(
         extracted_text = extract_text_from_image(
             path
         )
+        print("OCR TEXT:", extracted_text)
 
 
         result = await create_claim(
