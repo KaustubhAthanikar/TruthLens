@@ -11,22 +11,19 @@ EMBEDDING_SERVICE_URL = settings.EMBEDDING_SERVICE_URL
 
 def create_embedding(text):
 
+    url = f"{settings.EMBEDDING_URL.rstrip('/')}/embed"
 
     response = requests.post(
-        f"{EMBEDDING_SERVICE_URL}/embed",
+        url,
         json={
             "text": text
         },
-        timeout=60
+        timeout=120
     )
-
 
     response.raise_for_status()
 
-
     return response.json()["embedding"]
-
-
 
 
 def extract_text_from_image(path):
