@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
-from ocr import extract_text_from_image
+from ocr.ocr_service import extract_text_from_image
 
 import shutil
 import uuid
