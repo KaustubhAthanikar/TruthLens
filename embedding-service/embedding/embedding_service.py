@@ -12,6 +12,7 @@ def create_embedding(text: str):
 
     embedding = model.encode(
         text,
+        batch_size=32,
         normalize_embeddings=True
     )
 
