@@ -11,7 +11,7 @@ def scrape_article(url):
 
         response = requests.get(
             url,
-            timeout=10,
+            timeout=100,
             headers={"User-Agent":"Mozilla/5.0"})
 
 

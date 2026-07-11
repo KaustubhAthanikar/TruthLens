@@ -19,7 +19,7 @@ def create_embedding(text):
         json={
             "text": text
         },
-        timeout=120
+        timeout=300
     )
 
     response.raise_for_status()
@@ -38,7 +38,7 @@ def create_embeddings(texts):
         json={
             "texts": texts
         },
-        timeout=120
+        timeout=300
     )
 
     response.raise_for_status()
@@ -61,7 +61,7 @@ def extract_text_from_image(path):
             files={
                 "file": file
             },
-            timeout=120
+            timeout=300
         )
 
 
