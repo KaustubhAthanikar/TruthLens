@@ -13,6 +13,7 @@ def create_embedding(text):
 
     url = f"{settings.EMBEDDING_SERVICE_URL.rstrip('/')}/embed"
 
+
     response = requests.post(
         url,
         json={
@@ -51,8 +52,6 @@ def create_embeddings(texts):
 def extract_text_from_image(path):
 
     url = f"{settings.OCR_SERVICE_URL.rstrip('/')}/ocr"
-
-    print("CALLING OCR:", url)
 
 
     with open(path, "rb") as file:

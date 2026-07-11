@@ -44,14 +44,19 @@ async def create_claim(text: str):
 
         else:
 
-            evidence = retrieve_evidence(query)
+            evidence = retrieve_evidence(query)  
 
             ranked_evidence = rank_evidence(
                 claim_text,
                 evidence
             )
 
+
+            
+
             final_evidence = [item for item in ranked_evidence if item.get("top_chunks")][:5]
+
+            
 
             for evidence_item in final_evidence:
                 store_evidence_chunks(
@@ -68,10 +73,14 @@ async def create_claim(text: str):
 
 
 
-        verification = verify_claim(
-            claim_text,
-            final_evidence
-        )
+        if not final_evidence:
+            verification = {
+                "verdict": "UNABLE_TO_VERIFY",
+                "confidence": 0,
+                "reason": "No relevant evidence could be retrieved."
+            }
+        else:
+            verification = verify_claim(claim_text, final_evidence)
 
 
 

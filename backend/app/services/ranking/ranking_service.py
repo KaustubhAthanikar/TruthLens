@@ -77,6 +77,11 @@ def rank_evidence(claim, evidences):
             3
         )
 
+        print(
+            evidence["title"],
+            "Chunks:",
+            len(evidence.get("chunks", []))
+        )
 
         evidence["top_chunks"] = rank_chunks(
             claim,
